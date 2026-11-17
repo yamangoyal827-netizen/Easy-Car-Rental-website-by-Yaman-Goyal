@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>EasyRent - Car Rental Management</title>
+  <link rel="stylesheet" href="easyrent.css">
+  <script src="easyrent.js" defer></script>
+</head>
+
+<body>
+
+  <header>
+    <div>
+      <div class="brand">Easy<span>Rent</span></div>
+      <p>Car Rental Management System</p>
+    </div>
+    <nav>
+      <button class="active" data-page="dashboard">Dashboard</button>
+      <button data-page="vehicles">Vehicles</button>
+      <button data-page="reservations">Reservations</button>
+      <button data-page="history">Rental History</button>
+      <button data-page="track">Track Rental</button>
+      <button data-page="damage">Damage Report</button>
+    </nav>
+  </header>
+
+  <main>
+    <section class="welcome">
+      <h1 id="pageTitle">Dashboard</h1>
+      <p>Manage vehicles, reservations and rental records in one place.</p>
+    </section>
+
+  
+    <section id="dashboard" class="section active">
+      <div class="stats">
+        <div class="stat">
+          <p>Total vehicles</p><strong id="totalCars">0</strong>
+        </div>
+        <div class="stat">
+          <p>Available now</p><strong id="availableCars">0</strong>
+        </div>
+        <div class="stat">
+          <p>Active rentals</p><strong id="activeRentals">0</strong>
+        </div>
+        <div class="stat">
+          <p>Reservations</p><strong id="totalBookings">0</strong>
+        </div>
+      </div>
+      <div class="panel">
+        <h2>Quick Actions</h2>
+        <p class="muted">Choose an option to get started.</p>
+        <div class="form-actions">
+          <button class="btn" data-go="vehicles">Browse Vehicles</button>
+          <button class="btn yellow" data-go="reservations">Make a Reservation</button>
+          <button class="btn light" data-go="track">Track Rental</button>
+          <button class="btn light" data-go="damage">Report Damage</button>
+        </div>
+      </div>
+      <div class="panel">
+        <h2>Recent Rental Activity</h2>
+        <div id="recentActivity" class="table-wrap"></div>
+      </div>
+    </section>
+
+    <!-- Vehicles -->
+    <section id="vehicles" class="section">
+      <div class="panel">
+        <h2>Browse Vehicles</h2>
+        <div class="toolbar">
+          <input id="vehicleSearch" placeholder="Search by car name or type...">
+          <select id="vehicleFilter">
+            <option value="All">All Availability</option>
+            <option value="Available">Available</option>
+            <option value="Rented">Rented</option>
+            <option value="Maintenance">Maintenance</option>
+          </select>
+          <button class="btn" id="showAddCar">+ Add Vehicle</button>
+        </div>
+        <div id="vehicleGrid" class="car-grid"></div>
+      </div>
+
+      <div class="panel" id="addCarPanel" style="display:none">
+        <h2>Add a Vehicle</h2>
+        <div id="carMessage" class="notice"></div>
+        <form id="carForm">
+          <div class="form-grid">
+            <div class="field"><label for="carName">Vehicle Name *</label>
+              <input id="carName" required placeholder="e.g. Maruti Swift">
+            </div>
+            <div class="field"><label for="carType">Category *</label>
+              <select id="carType" required>
+                <option value="">Choose Category</option>
+                <option>Hatchback</option>
+                <option>Sedan</option>
+                <option>SUV</option>
+                <option>Electric</option>
+              </select>
+            </div>
+            <div class="field"><label for="carPrice">Price Per Day (₹) *</label>
+              <input id="carPrice" type="number" min="1" required placeholder="1500">
+            </div>
+            <div class="field"><label for="carStatus">Availability</label>
+              <select id="carStatus">
+                <option>Available</option>
+                <option>Rented</option>
+                <option>Maintenance</option>
+              </select>
+            </div>
+          </div>
+          <div class="form-actions">
+            <button class="btn" type="submit">Save Vehicle</button>
+            <button class="btn light" type="button" id="cancelCar">Cancel</button>
+          </div>
+        </form>
+      </div>
+    </section>
+
+    <!-- Reservations -->
+    <section id="reservations" class="section">
+      <div class="panel">
+        <h2>Make a Reservation</h2>
+        <p class="muted">Fields marked * are required.</p>
+        <div id="bookingMessage" class="notice"></div>
+        <form id="bookingForm">
+          <div class="form-grid">
+            <div class="field"><label for="customerName">Customer Name *</label>
+              <input id="customerName" required placeholder="Your full name">
+            </div>
+            <div class="field"><label for="customerPhone">Phone Number *</label>
+              <input id="customerPhone" required inputmode="numeric" pattern="[0-9]{10}" maxlength="10"
+                placeholder="10 digit number">
+            </div>
+            <div class="field"><label for="bookingCar">Choose Vehicle *</label>
+              <select id="bookingCar" required></select>
+            </div>
+            <div class="field"><label for="pickupDate">Pickup Date *</label>
+              <input id="pickupDate" type="date" required>
+            </div>
+            <div class="field"><label for="returnDate">Return Date *</label>
+              <input id="returnDate" type="date" required>
+            </div>
+          </div>
+          <div class="form-actions"><button class="btn" type="submit">Confirm Reservation</button></div>
+        </form>
+      </div>
+      <div class="panel">
+        <h2>Reservation Records</h2>
+        <div class="toolbar"><input id="bookingSearch" placeholder="Search customer or vehicle..."></div>
+        <div id="bookingTable" class="table-wrap"></div>
+      </div>
+    </section>
+
+    <!-- Rental History -->
+    <section id="history" class="section">
+      <div class="panel">
+        <h2>Rental History</h2>
+        <p class="muted">All rentals are saved here, even after you close the browser.</p>
+        <div id="historyTable" class="table-wrap"></div>
+        <div class="form-actions"><button class="btn light" id="resetData">Delete all saved data</button></div>
+      </div>
+    </section>
+
+    <!-- Track Rental -->
+    <section id="track" class="section">
+      <div class="panel">
+        <h2>Track Rental</h2>
+        <p class="muted">Choose a booking to see its progress and update its status.</p>
+        <div class="toolbar"><select id="trackSelect" style="flex:1"></select></div>
+        <div id="trackView"></div>
+      </div>
+    </section>
+
+   
+    <section id="damage" class="section">
+      <div class="panel">
+        <h2>Vehicle Damage Report</h2>
+        <p class="muted">Record any damage found before or after a rental.</p>
+        <div id="damageMessage" class="notice"></div>
+        <form id="damageForm">
+          <div class="form-grid">
+            <div class="field"><label for="damageCar">Vehicle *</label>
+              <select id="damageCar" required></select>
+            </div>
+            <div class="field"><label for="damageDate">Date Noticed *</label>
+              <input id="damageDate" type="date" required>
+            </div>
+            <div class="field full"><label for="damageDetails">Damage Details *</label>
+              <textarea id="damageDetails" required placeholder="Describe the damage..."></textarea>
+            </div>
+          </div>
+          <div class="form-actions"><button class="btn" type="submit">Submit Damage Report</button></div>
+        </form>
+      </div>
+      <div class="panel">
+        <h2>Submitted Reports</h2>
+        <div id="damageTable" class="table-wrap"></div>
+      </div>
+    </section>
+  </main>
+
+  <footer>EasyRent | Car Rental Management | Student Project</footer>
+
+</body>
+
+</html>
